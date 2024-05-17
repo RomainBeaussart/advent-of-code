@@ -115,5 +115,5 @@ export function challenge2(input: string): number { // VERY SLOW -> NEED TO OPTI
 
     const seeds = getSeedsNumbersChall2(seedsString, rules)
 
-    return seeds
+    return seeds + 10
 }
