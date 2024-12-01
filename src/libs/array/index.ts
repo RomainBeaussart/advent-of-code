@@ -27,6 +27,7 @@ declare global {
       asc(): number[];
       desc(): number[];
       groupBy<T>(key: groupByFunction<T>): { [key: string]: T[] };
+      count<T>(value: T): number;
     }
 }
 
@@ -64,4 +65,8 @@ Array.prototype.chunk = function<T> (this: any[], size: number): T[][] {
 
 Array.prototype.groupBy = function<T> (this: T[], key: groupByFunction<T>): { [key: string]: T[] } {
     return groupBy(this, key);
+}
+
+Array.prototype.count = function<T> (this: T[], value: T): number {
+    return this.filter(x => x === value).length;
 }

@@ -1,39 +1,47 @@
-import { NEWLINE } from '../libs/global'
+import { NEWLINE, WHITESPACE } from '../libs/global'
+// import { pipe } from "rxjs"
 
-export function challenge1(input: string) {
-    return input.split(NEWLINE)
-        .map(calibrationValue)
-        .sum();
+type Tuple<T> = [T, T];
+type NumberTuple = Tuple<number>;
+type NumberListTuple = Tuple<number[]>;
+
+function convertToLists(input: string): NumberListTuple {
+    const lists: [NumberTuple] = input.split(NEWLINE)
+        .map(
+            (x: string) => x
+                .splitToNumbers(' ')
+        ) as [NumberTuple]
+
+    return lists.reduce(
+        (acc: [Array<number>, Array<number>], x: NumberTuple) => {
+            acc[0].push(x[0]);
+            acc[1].push(x[1]);
+            return acc;
+        },
+        [[], []]
+    ) as NumberListTuple;
 }
 
-function calibrationValue(input: string): number {
-    // get first number in string
-    const numbersOfString = input.match(/-?\d/g);
-    if (!numbersOfString) {
-        throw new Error('No numbers found in string');
-    }
-    let result = `${numbersOfString[0]}${numbersOfString?.at(-1)}`
+export function challenge1(input: string) {
+    const columns = convertToLists(input)
+        .map((column) => column.sort((a, b) => a - b));
 
-    return +result
+    const [column1, column2] = columns;
+
+    const distance = column1.reduce(
+        (acc, x, i) => acc + Math.abs(x - column2[i]),
+        0
+    );
+    return distance;
+        
 }
 
 export function challenge2(input: string) {
-    return input.split(NEWLINE)
-        .map(calibrationValueWithWords)
-        .sum();
-}
+    const [column1, column2] = convertToLists(input);
 
-function calibrationValueWithWords(input: string): number {
-    const matches = []
-    const regex = /-?(one|two|three|four|five|six|seven|eight|nine|\d)/g
+    return column1.reduce(
+        (acc, x) => {
+            return acc += column2.count(x) * x
+        }, 0)
 
-    let match
-
-    while ((match = regex.exec(input))) {
-        match = match[0];
-        regex.lastIndex -= match.length - 1;
-        matches.push(match);
-    }
-
-    return +`${matches[0].toFigure()}${matches?.at(-1)?.toFigure()}`
 }
