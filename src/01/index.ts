@@ -1,7 +1,7 @@
 import { NEWLINE, WHITESPACE } from '../libs/global'
+import { Tuple } from './types/tuple';
 // import { pipe } from "rxjs"
 
-type Tuple<T> = [T, T];
 type NumberTuple = Tuple<number>;
 type NumberListTuple = Tuple<number[]>;
 
